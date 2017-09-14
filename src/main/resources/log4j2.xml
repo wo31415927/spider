@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO" shutdownHook="disable">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36}:%L - %msg%n"/>
+        </Console>
+
+        <RollingRandomAccessFile name="File" fileName="logs/batch.log"
+                                 filePattern="logs/batch.%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %p [%t] (%F:%L) %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="10 GB"/>
+            </Policies>
+            <DefaultRolloverStrategy>
+                <Delete basePath="logs/" maxDepth="1">
+                    <IfFileName glob="batch.*.log"/>
+                    <IfLastModified age="10d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingRandomAccessFile>
+    </Appenders>
+
+
+    <Loggers>
+        <!--ERROR信息同步，INFO信息异步-->
+        <root level="INFO" includeLocation="true">
+            <AppenderRef ref="Console"/>
+            <!--<AppenderRef ref="File"/>-->
+        </root>
+
+        <asyncLogger name="org.springframework.*" level="OFF" additivity="false"
+                     includeLocation="true"/>
+        <asyncLogger name="us.codecraft.webmagic.downloader.HttpClientDownloader" level="ERROR" additivity="false"
+                     includeLocation="true">
+            <AppenderRef ref="Console"/>
+        </asyncLogger>
+        <asyncLogger name="pipeline.ImgGroupPageModelPipeline" level="ERROR" additivity="false"
+                     includeLocation="true">
+            <AppenderRef ref="Console"/>
+        </asyncLogger>
+    </Loggers>
+</Configuration>
