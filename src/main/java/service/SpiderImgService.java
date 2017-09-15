@@ -5,6 +5,8 @@ import java.nio.file.Path;
 import lombok.extern.slf4j.Slf4j;
 import pipeline.AbstractPageModelPipeline;
 import pipeline.ImgGroupPageModelPipeline;
+import us.codecraft.webmagic.downloader.Downloader;
+import us.codecraft.webmagic.downloader.HttpClientDownloader;
 
 /** cctv 2017/9/14 */
 @Slf4j
@@ -13,6 +15,11 @@ public class SpiderImgService extends SpiderService {
 
   public SpiderImgService(SpiderPlan spiderPlan,Class curClass) {
     super(spiderPlan,curClass);
+  }
+
+  @Override
+  protected Downloader downloader() {
+    return new HttpClientDownloader();
   }
 
   @Override

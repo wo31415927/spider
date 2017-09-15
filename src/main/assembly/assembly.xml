@@ -5,11 +5,21 @@
     <id>t${buildNumber}</id>
     <includeBaseDirectory>false</includeBaseDirectory>
     <formats>
-        <format>tar.gz</format>
+        <format>tar</format>
     </formats>
     <fileSets>
         <fileSet>
             <directory>target/lib</directory>
+            <outputDirectory>spider/lib</outputDirectory>
+            <includes>
+                <include>*.jar</include>
+            </includes>
+            <excludes>
+                <exclude>wrapper.jar</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>target</directory>
             <outputDirectory>spider/lib</outputDirectory>
             <includes>
                 <include>*.jar</include>

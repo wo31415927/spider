@@ -1,5 +1,8 @@
 package service;
 
+import com.google.common.base.Preconditions;
+import com.google.gson.reflect.TypeToken;
+
 import org.apache.http.Header;
 import org.apache.http.HeaderElement;
 import org.apache.http.HttpResponse;
@@ -12,9 +15,11 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +29,7 @@ import pipeline.LinkedPageModelPipeline;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Site;
 import us.codecraft.webmagic.Spider;
+import us.codecraft.webmagic.downloader.Downloader;
 import us.codecraft.webmagic.model.OOSpider;
 import us.codecraft.webmagic.model.annotation.HelpUrl;
 import us.codecraft.webmagic.model.annotation.TargetUrl;
@@ -51,6 +57,7 @@ public abstract class SpiderService extends AbstractNormalService {
   protected final Class curClass;
   protected AbstractPageModelPipeline pageModelPipeline;
 
+  protected abstract Downloader downloader();
   @Override
   protected Executor executor() {
     return executorService;
@@ -71,6 +78,7 @@ public abstract class SpiderService extends AbstractNormalService {
                 Site.me().setSleepTime(0).setRetryTimes(3).setRetrySleepTime(500),
                 new LinkedPageModelPipeline(pageModelPipeline),
                 curClass)
+                .setDownloader(downloader())
             .thread(16)
             .addUrl(String.format(spiderPlan.getStartUrl(), host));
     pageModelPipeline.setSpider(spider);
@@ -80,9 +88,7 @@ public abstract class SpiderService extends AbstractNormalService {
     if (!spiderPlan.getResPath().toFile().exists()) {
       Files.createDirectory(spiderPlan.getResPath());
     }
-    if (!spiderPlan.isNeedClearDes()) {
-      initContinuous(spider, spiderPlan.getDesPath());
-    }
+    initContinuous(spider, spiderPlan.getDesPath());
   }
 
   @Override
@@ -145,22 +151,38 @@ public abstract class SpiderService extends AbstractNormalService {
         ((HashSetDuplicateRemover)
                 ((DuplicateRemovedScheduler) spider.getScheduler()).getDuplicateRemover())
             .getUrls();
-    if (Files.exists(queuePath)) {
-      try (Reader reader = Files.newBufferedReader(queuePath, Charset.defaultCharset())) {
-        queue.addAll(JsonUtils.gson.fromJson(reader, Queue.class));
+    if (!spiderPlan.isNeedClearDes() && spiderPlan.isNeedGoOn()) {
+      if (Files.exists(queuePath)) {
+        try (Reader reader = Files.newBufferedReader(queuePath, Charset.defaultCharset())) {
+          queue.addAll(
+              (List<Request>)
+                  JsonUtils.gson.fromJson(reader, new TypeToken<List<Request>>() {}.getType()));
+          Preconditions.checkState(queue.size() > 1, "queue.json is empty!");
+          queue.poll();
+        }
+        log.info("Load queue json finished!");
       }
-    }
-    if (Files.exists(dupFilePath)) {
-      try (Reader reader = Files.newBufferedReader(dupFilePath, Charset.defaultCharset())) {
-        urls.addAll(JsonUtils.gson.fromJson(reader, Set.class));
+      if (Files.exists(dupFilePath)) {
+        try (Reader reader = Files.newBufferedReader(dupFilePath, Charset.defaultCharset())) {
+          urls.addAll(JsonUtils.gson.fromJson(reader, Set.class));
+        }
+        log.info("Load dup json finished!");
       }
     }
     Runtime.getRuntime()
         .addShutdownHook(
             new Thread() {
               public void run() {
-                spider.getStat().compareAndSet(1, 2);
+                spider.stop();
                 System.out.println("ThreadAlive: " + spider.getThreadPool().getThreadAlive());
+                while (spider.getThreadAlive() > 0) {
+                  try {
+                    TimeUnit.SECONDS.sleep(1);
+                    System.out.println("等待所有的Spider-Exec线程结束！");
+                  } catch (InterruptedException e) {
+                    e.printStackTrace();
+                  }
+                }
                 try {
                   Files.deleteIfExists(queuePath);
                   Files.write(

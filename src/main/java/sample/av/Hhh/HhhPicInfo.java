@@ -1,11 +1,11 @@
-package sample.av;
+package sample.av.Hhh;
 
 import java.util.List;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import pojo.ImgGroupInfo;
+import pojo.IImgGroupInfo;
 import us.codecraft.webmagic.model.annotation.ExtractBy;
 import us.codecraft.webmagic.model.annotation.HelpUrl;
 import us.codecraft.webmagic.model.annotation.TargetUrl;
@@ -17,7 +17,7 @@ import utils.PatternUtils;
 @Slf4j
 @TargetUrl("https://%s/htm/pic1/\\d+.htm")
 @HelpUrl("https://%s/htm/piclist1/\\d+.htm")
-public class HhhInfo extends ImgGroupInfo {
+public class HhhPicInfo implements IImgGroupInfo {
   @ExtractBy(value = "//div[@class='picContent']/text(1)")
   protected String title;
 

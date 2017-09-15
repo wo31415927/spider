@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import pojo.Dic;
-import sample.av.HhhInfo;
+import sample.av.Hhh.HhhVideoInfo;
 import service.SpiderPlan;
 import service.SpiderServiceFactory;
 
@@ -35,15 +35,26 @@ public class SpiderMain {
       MoreExecutors.listeningDecorator(executorDelegate);
 
   public static void main(String[] args) {
+    /*SpiderPlan spiderPlan =
+    new SpiderPlan(
+            false,
+        true,
+        "https://www.uuu955.com/",
+        "https://%s/htm/piclist1/",
+        Paths.get("F:\\照片与视频\\spider\\hhh_new"),
+        16,
+        HhhPicInfo.class,
+        Dic.SpiderResType.IMG);*/
     SpiderPlan spiderPlan =
         new SpiderPlan(
-//            false,
+            false,
+            false,
             "https://www.uuu955.com/",
-            "https://%s/htm/piclist1/",
+            "https://%s/htm/downlist6/index.htm",
             Paths.get("F:\\照片与视频\\spider\\hhh_new"),
             16,
-            HhhInfo.class,
-            Dic.SpiderResType.IMG);
+            HhhVideoInfo.class,
+            Dic.SpiderResType.FILM);
     SpiderServiceFactory.create(spiderPlan).startAsync();
   }
 }

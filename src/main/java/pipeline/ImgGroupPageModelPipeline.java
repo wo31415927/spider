@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import pojo.ImgGroupInfo;
+import pojo.IImgGroupInfo;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Task;
 import utils.IOUtils;
@@ -22,8 +22,7 @@ import utils.PatternUtils;
 @Slf4j
 @Getter
 @Setter
-public class ImgGroupPageModelPipeline extends AbstractPageModelPipeline<ImgGroupInfo>{
-  protected final Path wkPath;
+public class ImgGroupPageModelPipeline extends AbstractPageModelPipeline<IImgGroupInfo>{
   //从http url中抽取img的名称
   protected String imgPattern = ".+/([\\S]+\\.[a-zA-Z]+)$";
   protected AtomicInteger picCnt = new AtomicInteger();
@@ -34,7 +33,7 @@ public class ImgGroupPageModelPipeline extends AbstractPageModelPipeline<ImgGrou
   }
 
   @Override
-  public void process(ImgGroupInfo imgGroupInfo, Task task) {
+  public void process(IImgGroupInfo imgGroupInfo, Task task) {
     /*picGroupCnt.incrementAndGet();
     picCnt.addAndGet(imgGroupInfo.getPicList().size());
     try {
@@ -43,7 +42,7 @@ public class ImgGroupPageModelPipeline extends AbstractPageModelPipeline<ImgGrou
       e.printStackTrace();
     }*/
     //有的html无法打开
-    if (Strings.isNullOrEmpty(imgGroupInfo.getTitle())) {
+    if (Strings.isNullOrEmpty(imgGroupInfo.getTitle().trim())) {
       log.warn("Found one empty ImgGroupInfo,This'll be omit!");
     } else {
       //        System.out.println(cnt.get() + "-" + o.toString());

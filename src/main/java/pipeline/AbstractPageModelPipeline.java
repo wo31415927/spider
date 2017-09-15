@@ -1,5 +1,7 @@
 package pipeline;
 
+import java.nio.file.Path;
+
 import lombok.Getter;
 import lombok.Setter;
 import us.codecraft.webmagic.Spider;
@@ -10,4 +12,6 @@ import us.codecraft.webmagic.pipeline.PageModelPipeline;
 @Setter
 public abstract class AbstractPageModelPipeline<T> implements PageModelPipeline<T> {
   protected Spider spider;
+  protected Path wkPath;
+
 }

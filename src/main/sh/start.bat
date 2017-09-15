@@ -1,82 +1,46 @@
-#!/bin/sh
+@echo off
+setlocal
+cd ..
+set "SPIDER_HOME=%cd%"
+cd %SPIDER_HOME%
+IF NOT EXIST "logs" MD "logs"
+echo %SPIDER_HOME%
 
-#set HOME
-CURR_DIR=`pwd`
-cd `dirname "$0"`/..
-SPIDER_HOME=`pwd`
-cd $CURR_DIR
+rem set JAVA_OPTS
+set "JAVA_OPTS=-server -Xms512m -Xmx2G -XX:MaxPermSize=256M -XX:+AggressiveOpts -XX:MaxDirectMemorySize=2G"
+rem jvm info
+rem JAVA_OPTS="$JAVA_OPTS -XX:+PrintCommandLineFlags -showversion"
+rem performance Options
+rem JAVA_OPTS="$JAVA_OPTS -Xss256k"
+rem JAVA_OPTS="$JAVA_OPTS -XX:+UseBiasedLocking"
+rem JAVA_OPTS="$JAVA_OPTS -XX:+UseFastAccessorMethods"
+rem JAVA_OPTS="$JAVA_OPTS -XX:+UseParNewGC"
+rem JAVA_OPTS="$JAVA_OPTS -XX:+UseConcMarkSweepGC"
+rem JAVA_OPTS="$JAVA_OPTS -XX:+CMSParallelRemarkEnabled"
+rem JAVA_OPTS="$JAVA_OPTS -XX:+UseCMSCompactAtFullCollection"
+rem JAVA_OPTS="$JAVA_OPTS -XX:+UseCMSInitiatingOccupancyOnly"
+rem JAVA_OPTS="$JAVA_OPTS -XX:CMSInitiatingOccupancyFraction=75"
+rem JAVA_OPTS="$JAVA_OPTS -XX:CMSInitiatingOccupancyFraction=75"
 
+rem GC Log Options
+rem JAVA_OPTS="$JAVA_OPTS -XX:+PrintGCApplicationStoppedTime"
+set "JAVA_OPTS=%JAVA_OPTS% -XX:+PrintGCDateStamps"
+set "JAVA_OPTS=%JAVA_OPTS% -XX:+PrintGCDetails"
+set "JAVA_OPTS=%JAVA_OPTS% -Xloggc:%SPIDER_HOME%\logs\gc.log"
+rem OOM dump
+set "JAVA_OPTS=%JAVA_OPTS% -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=%SPIDER_HOME%"
+rem debug Options
+rem JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8805"
+rem  ZK
+rem JAVA_OPTS="$JAVA_OPTS -Djava.security.auth.login.config=/etc/security/apps_client_jaas.conf"
 
-if [ -z "$SPIDER_HOME" ] ; then
-    echo
-    echo "Error: SPIDER_HOME environment variable is not defined correctly."
-    echo
-    exit 1
-fi
+set "JAVA_OPTS=%JAVA_OPTS% -showversion -DSPIDER_HOME=%SPIDER_HOME% -DappName=SPIDER -cp %SPIDER_HOME%\lib\*;%SPIDER_HOME%\conf startup.SpiderMain"
+echo JAVA_OPTS=%JAVA_OPTS%
 
-
-#check JAVA_HOME & java
-noJavaHome=false
-if [ -z "$JAVA_HOME" ] ; then
-    noJavaHome=true
-fi
-if [ ! -e "$JAVA_HOME/bin/java" ] ; then
-    noJavaHome=true
-fi
-if $noJavaHome ; then
-    echo
-    echo "Error: JAVA_HOME environment variable is not set."
-    echo
-    exit 1
-fi
-
-#set JAVA_OPTS
-JAVA_OPTS="-server -Xms512m -Xmx2G -XX:MaxPermSize=256M -XX:+AggressiveOpts -XX:MaxDirectMemorySize=2G"
-#jvm info
-#JAVA_OPTS="$JAVA_OPTS -XX:+PrintCommandLineFlags -showversion"
-#performance Options
-#JAVA_OPTS="$JAVA_OPTS -Xss256k"
-#JAVA_OPTS="$JAVA_OPTS -XX:+UseBiasedLocking"
-#JAVA_OPTS="$JAVA_OPTS -XX:+UseFastAccessorMethods"
-#JAVA_OPTS="$JAVA_OPTS -XX:+UseParNewGC"
-#JAVA_OPTS="$JAVA_OPTS -XX:+UseConcMarkSweepGC"
-#JAVA_OPTS="$JAVA_OPTS -XX:+CMSParallelRemarkEnabled"
-#JAVA_OPTS="$JAVA_OPTS -XX:+UseCMSCompactAtFullCollection"
-#JAVA_OPTS="$JAVA_OPTS -XX:+UseCMSInitiatingOccupancyOnly"
-#JAVA_OPTS="$JAVA_OPTS -XX:CMSInitiatingOccupancyFraction=75"
-#JAVA_OPTS="$JAVA_OPTS -XX:CMSInitiatingOccupancyFraction=75"
-
-#GC Log Options
-#JAVA_OPTS="$JAVA_OPTS -XX:+PrintGCApplicationStoppedTime"
-JAVA_OPTS="$JAVA_OPTS -XX:+PrintGCDateStamps"
-JAVA_OPTS="$JAVA_OPTS -XX:+PrintGCDetails"
-JAVA_OPTS="$JAVA_OPTS -Xloggc:${SPIDER_HOME}/logs/gc.log"
-#OOM dump
-JAVA_OPTS="$JAVA_OPTS -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${SPIDER_HOME}/"
-#debug Options
-#JAVA_OPTS="$JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=8805"
-# ZK
-#JAVA_OPTS="$JAVA_OPTS -Djava.security.auth.login.config=/etc/security/apps_client_jaas.conf"
-
-#get input arg
-SPIDER_ARG=""
-for arg in "$@"
-do
-	SPIDER_ARG="$SPIDER_ARG '$arg'"
-done
-
-#set CLASSPATH
-SPIDER_CLASSPATH="$SPIDER_HOME/conf:$SPIDER_HOME/lib/*"
-
-
-#start
-RUN_CMD="\"$JAVA_HOME/bin/java\""
-RUN_CMD="$RUN_CMD -DappName=SPIDER -DSPIDER_HOME=\"$SPIDER_HOME\""
-RUN_CMD="$RUN_CMD -classpath \"$SPIDER_CLASSPATH\""
-RUN_CMD="$RUN_CMD $JAVA_OPTS"
-RUN_CMD="$RUN_CMD package sample.av.HhhInfo $SPIDER_ARG"
-RUN_CMD="$RUN_CMD 2>&1 "
-#echo $RUN_CMD
-eval $RUN_CMD
-#echo $! > $SPIDER_HOME/bin/DUMP.pid
-
+:start
+java %JAVA_OPTS%
+goto exit
+:exit
+endlocal
+@echo on
+pause

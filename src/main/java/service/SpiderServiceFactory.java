@@ -6,6 +6,8 @@ public class SpiderServiceFactory {
     switch (spiderPlan.getResType()) {
       case IMG:
         return new SpiderImgService(spiderPlan,spiderPlan.getCurClass());
+      case FILM:
+        return new SpiderFilmService(spiderPlan,spiderPlan.getCurClass());
       default:
         throw new IllegalArgumentException(spiderPlan.getResType().name());
     }

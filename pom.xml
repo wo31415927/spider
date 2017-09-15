@@ -7,6 +7,13 @@
     <artifactId>spider</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <scm>
+        <connection>scm:git:https://github.com/wo31415927/spider.git</connection>
+        <developerConnection>scm:git:https://github.com/wo31415927/spider.git
+        </developerConnection>
+        <!--<tag>MASTER123</tag>-->
+        <url>https://github.com/wo31415927/spider.git</url>
+    </scm>
 
     <properties>
         <version.template.file>VERSION.txt.template</version.template.file>
@@ -436,65 +443,6 @@
                 </executions>
             </plugin>
 
-<!--
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>2.2</version>
-            </plugin>
-
-            &lt;!&ndash; maven下更新git &ndash;&gt;
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-plugin</artifactId>
-                <version>1.9.4</version>
-                <configuration>
-                    <providerImplementations>
-                        <git>git</git>
-                    </providerImplementations>
-                </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.apache.maven.scm</groupId>
-                        <artifactId>maven-scm-provider-gitexe</artifactId>
-                        <version>RELEASE</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
-            <plugin>
-                <groupId>com.google.code.maven-replacer-plugin</groupId>
-                <artifactId>replacer</artifactId>
-                <version>1.5.3</version>
-                <executions>
-                    <execution>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                        <configuration>
-                            <file>${project.basedir}/${version.template.file}</file>
-                            <outputFile>${project.basedir}/target/classes/${version.file}
-                            </outputFile>
-                            <replacements>
-                                <replacement>
-                                    <token>@buildnumber@</token>
-                                    <value>${buildNumber}</value>
-                                </replacement>
-                                <replacement>
-                                    <token>@buildtime@</token>
-                                    <value>${maven.build.timestamp}</value>
-                                </replacement>
-                                <replacement>
-                                    <token>@pomversion@</token>
-                                    <value>${project.version}</value>
-                                </replacement>
-                            </replacements>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
-            <!--
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>buildnumber-maven-plugin</artifactId>
@@ -528,14 +476,13 @@
                     </dependency>
                 </dependencies>
             </plugin>
-            -->
 
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>${maven-assembly-plugin.version}</version>
                 <configuration>
                     <finalName>
-                        ${project.artifactId}-v${project.version}
+                        ${project.artifactId}-v${project.version}-git-${buildNumber}
                     </finalName>
                     <appendAssemblyId>false</appendAssemblyId>
                     <encoding>${project.build.sourceEncoding}</encoding>

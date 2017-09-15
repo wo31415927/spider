@@ -16,6 +16,8 @@ import static service.SpiderService.RES_DIR_NAME;
 public class SpiderPlan {
   protected Dic.SpiderResType resType;
   protected boolean needClearDes = true;
+  //是否需要续传
+  protected boolean needGoOn = false;
   protected String initUrl;
   protected String startUrl;
   protected Path desPath;
@@ -25,6 +27,7 @@ public class SpiderPlan {
 
   public SpiderPlan(
       boolean needClearDes,
+      boolean needGoOn,
       String initUrl,
       String startUrl,
       Path desPath,
@@ -32,6 +35,7 @@ public class SpiderPlan {
       Class curClass,
       Dic.SpiderResType resType) {
     this.needClearDes = needClearDes;
+    this.needGoOn = needGoOn;
     this.initUrl = initUrl;
     this.startUrl = startUrl;
     this.desPath = desPath;
@@ -50,6 +54,17 @@ public class SpiderPlan {
       int spiderThreadCnt,
       Class curClass,
       Dic.SpiderResType resType) {
-    this(true, initUrl, startUrl, desPath, spiderThreadCnt, curClass, resType);
+    this(true, false, initUrl, startUrl, desPath, spiderThreadCnt, curClass, resType);
+  }
+
+  public SpiderPlan(
+          boolean needGoOn,
+          String initUrl,
+          String startUrl,
+          Path desPath,
+          int spiderThreadCnt,
+          Class curClass,
+          Dic.SpiderResType resType) {
+    this(true, needGoOn, initUrl, startUrl, desPath, spiderThreadCnt, curClass, resType);
   }
 }
