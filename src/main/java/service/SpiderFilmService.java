@@ -1,6 +1,5 @@
 package service;
 
-import java.io.IOException;
 import java.nio.file.Path;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,17 +25,14 @@ public class SpiderFilmService extends SpiderService {
   }
   @Override
   protected void shutDown() {
-    calcTimer.cancel();
+    if(null != calcTimer) {
+      calcTimer.cancel();
+    }
     super.shutDown();
   }
 
   @Override
   protected Downloader downloader() {
-    try {
-      System.out.println(org.apache.commons.io.IOUtils.toString(this.getClass().getResourceAsStream("/config.ini")));
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
     System.setProperty("selenuim_config","/config.ini");
     return new SeleniumDownloader("D:\\chromedriver_win32\\chromedriver.exe");
   }
@@ -44,9 +40,9 @@ public class SpiderFilmService extends SpiderService {
   @Override
   protected void startUp() throws Exception {
     super.startUp();
-    calcTimer =
+    /*calcTimer =
         new FilmPageModelPipeline.CalcTimer(
-            FilmPageModelPipeline.class.cast(pageModelPipeline));
+            FilmPageModelPipeline.class.cast(pageModelPipeline));*/
   }
 
   @Override

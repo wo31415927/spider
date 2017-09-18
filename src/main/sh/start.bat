@@ -7,7 +7,7 @@ IF NOT EXIST "logs" MD "logs"
 echo %SPIDER_HOME%
 
 rem set JAVA_OPTS
-set "JAVA_OPTS=-server -Xms512m -Xmx2G -XX:MaxPermSize=256M -XX:+AggressiveOpts -XX:MaxDirectMemorySize=2G"
+set "JAVA_OPTS=-server -Xms512m -Xmx4G -XX:MaxPermSize=256M -XX:+AggressiveOpts -XX:MaxDirectMemorySize=2G"
 rem jvm info
 rem JAVA_OPTS="$JAVA_OPTS -XX:+PrintCommandLineFlags -showversion"
 rem performance Options

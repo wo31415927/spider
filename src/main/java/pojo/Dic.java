@@ -6,6 +6,6 @@ package pojo;
  */
 public class Dic {
    public enum SpiderResType{
-       IMG,FILM;
+       INFO,IMG,FILM;
    }
 }

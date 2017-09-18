@@ -30,14 +30,24 @@
             <AppenderRef ref="Console"/>
             <!--<AppenderRef ref="File"/>-->
         </root>
-
         <asyncLogger name="org.springframework.*" level="OFF" additivity="false"
                      includeLocation="true"/>
-        <asyncLogger name="us.codecraft.webmagic.downloader.HttpClientDownloader" level="ERROR" additivity="false"
+        <asyncLogger name="us.codecraft.webmagic.downloader.HttpClientDownloader" level="ERROR"
+                     additivity="false"
                      includeLocation="true">
             <AppenderRef ref="Console"/>
         </asyncLogger>
         <asyncLogger name="pipeline.ImgGroupPageModelPipeline" level="ERROR" additivity="false"
+                     includeLocation="true">
+            <AppenderRef ref="Console"/>
+        </asyncLogger>
+        <asyncLogger name="org.apache.http.impl.execchain.RetryExec" level="ERROR"
+                     additivity="false"
+                     includeLocation="true">
+            <AppenderRef ref="Console"/>
+        </asyncLogger>
+        <asyncLogger name="us.codecraft.webmagic.downloader.selenium.SeleniumDownloader" level="ERROR"
+                     additivity="false"
                      includeLocation="true">
             <AppenderRef ref="Console"/>
         </asyncLogger>

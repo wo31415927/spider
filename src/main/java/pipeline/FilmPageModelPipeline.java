@@ -17,6 +17,7 @@ import pojo.IVideoInfo;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.Task;
 import us.codecraft.webmagic.downloader.HttpClientDownloader;
+import utils.PatternUtils;
 
 /** cctv 2017/8/25 */
 @Slf4j
@@ -37,18 +38,24 @@ public class FilmPageModelPipeline extends AbstractPageModelPipeline<IVideoInfo>
     if (Strings.isNullOrEmpty(videoInfo.getTitle().trim())) {
       log.warn("Found one empty IVideoInfo,This'll be omit!");
     } else {
-      Path videoPath = wkPath.resolve(videoInfo.getTitle());
+      String filmName =
+          videoInfo.getTitle() + PatternUtils.groupOnlyOne(videoInfo.getUrl(), "(\\.[a-zA-Z]+)$");
+      Path videoPath = wkPath.resolve(filmName);
       cnt.incrementAndGet();
       try {
         Request request = new Request(videoInfo.getUrl());
         byte[] bytes = null;
+        log.debug("开始下载：[{}][{}]", filmName,videoInfo.getUrl());
         bytes = httpClientDownloader.download(request, task).getBytes();
         if (null != bytes) {
           Files.write(videoPath, bytes, StandardOpenOption.CREATE_NEW);
+          binLen.addAndGet(bytes.length);
+          log.info("下载完成：[{}]", filmName);
+        } else {
+          log.debug("下载失败：[{}][{}]", filmName,videoInfo.getUrl());
         }
-        binLen.addAndGet(bytes.length);
       } catch (Exception e) {
-        log.warn("下载Video[{}]异常,跳过", videoInfo.getTitle(), e);
+        log.warn("下载Video[{}][{}]异常,跳过", videoInfo.getTitle(),videoInfo.getUrl(), e);
       }
     }
   }
@@ -75,8 +82,8 @@ public class FilmPageModelPipeline extends AbstractPageModelPipeline<IVideoInfo>
               System.out.println("---");
             }
           },
-          1000,
-          5000);
+          30000,
+          30000);
     }
 
     public void cancel() {

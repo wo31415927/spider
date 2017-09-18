@@ -1,9 +1,13 @@
 package sample.av.Hhh;
 
+import java.nio.file.Paths;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import pojo.Dic;
 import pojo.IVideoInfo;
+import service.SpiderPlan;
 import us.codecraft.webmagic.model.annotation.ExtractBy;
 import us.codecraft.webmagic.model.annotation.HelpUrl;
 import us.codecraft.webmagic.model.annotation.TargetUrl;
@@ -21,6 +25,17 @@ public class HhhVideoInfo implements IVideoInfo{
 
   @ExtractBy("ul[@id='downUL']/li[1]/p/html()")
   protected String url;
+
+  public static final SpiderPlan spiderPlan =
+          new SpiderPlan(
+                  false,
+                  true,
+                  "https://www.uuu955.com/",
+                  "https://%s/htm/downlist6/index.htm",
+                  Paths.get("F:\\照片与视频\\spider\\hhh_new"),
+                  4,
+                  HhhVideoInfo.class,
+                  Dic.SpiderResType.FILM);
 
   @Override
   public String toString() {

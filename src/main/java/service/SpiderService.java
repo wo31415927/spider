@@ -79,7 +79,7 @@ public abstract class SpiderService extends AbstractNormalService {
                 new LinkedPageModelPipeline(pageModelPipeline),
                 curClass)
                 .setDownloader(downloader())
-            .thread(16)
+            .thread(spiderPlan.getSpiderThreadCnt())
             .addUrl(String.format(spiderPlan.getStartUrl(), host));
     pageModelPipeline.setSpider(spider);
     if (spiderPlan.isNeedClearDes()) {
