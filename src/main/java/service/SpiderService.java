@@ -58,6 +58,7 @@ public abstract class SpiderService extends AbstractNormalService {
   protected AbstractPageModelPipeline pageModelPipeline;
 
   protected abstract Downloader downloader();
+
   @Override
   protected Executor executor() {
     return executorService;
@@ -78,9 +79,11 @@ public abstract class SpiderService extends AbstractNormalService {
                 Site.me().setSleepTime(0).setRetryTimes(3).setRetrySleepTime(500),
                 new LinkedPageModelPipeline(pageModelPipeline),
                 curClass)
-                .setDownloader(downloader())
             .thread(spiderPlan.getSpiderThreadCnt())
             .addUrl(String.format(spiderPlan.getStartUrl(), host));
+    if (null != downloader()) {
+      spider.setDownloader(downloader());
+    }
     pageModelPipeline.setSpider(spider);
     if (spiderPlan.isNeedClearDes()) {
       IOUtils.mkdirD(spiderPlan.getDesPath());
