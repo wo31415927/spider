@@ -1,0 +1,104 @@
+# Created by .ignore support plugin (hsz.mobi)
+
+## git
+.git/*
+
+## Mobile Tools for Java (J2ME)
+.mtj.tmp/*
+
+## virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+## Maven template
+target/**/*
+*/target/**/*
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties  
+.mvn/timing.properties  
+
+## IntelliJ  
+/out/*
+.idea/*
+
+### File-based project format:  
+*.iws
+*.iml
+*.ipr
+  
+### mpeltonen/sbt-idea plugin  
+.idea_modules/*
+
+## JIRA plugin  
+atlassian-ide-plugin.xml
+  
+## Crashlytics plugin (for Android Studio and IntelliJ)  
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+
+## eclipse
+*.classpath
+*.project
+.settings/*
+
+### Eclipse template
+*.pydevproject
+.metadata
+.gradle
+bin/*
+tmp/*
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.loadpath
+
+### External tool builders
+.externalToolBuilders/*
+
+### Locally stored "Eclipse launch configurations"
+*.launch
+
+### CDT-specific
+.cproject
+
+### Java annotation processor (APT)
+.factorypath
+
+### PDT-specific
+.buildpath
+
+### sbteclipse plugin
+.target
+
+### TeXlipse plugin
+.texlipse
+
+## Generate by jmh
+BenchmarkList
+CompilerHints
+
+### Gradle template
+build/*
+
+### Ignore Gradle GUI config
+gradle-app.setting
+
+### Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar
+
+## test-ng
+/test-output/*
+
+
+## project
+**/logs
+VERSION.txt.template
+
